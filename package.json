@@ -1,0 +1,27 @@
+{
+  "name": "dala-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "npx ts-node index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FairyScript/dala-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FairyScript/dala-server/issues"
+  },
+  "homepage": "https://github.com/FairyScript/dala-server#readme",
+  "devDependencies": {
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "yaml": "^1.10.2"
+  }
+}
