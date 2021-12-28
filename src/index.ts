@@ -31,5 +31,8 @@ import { getConfig } from './utils'
   })
 
   const app = new Koa()
-  app.use(router.routes()).use(router.allowedMethods()).listen(3300)
+  app
+    .use(router.routes())
+    .use(router.allowedMethods())
+    .listen(Number(config.port) || 3300)
 })()

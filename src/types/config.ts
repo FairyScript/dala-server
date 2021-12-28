@@ -2,6 +2,7 @@ import { RepoManager } from '../repoManager'
 import { Repo } from './repo'
 
 export interface Config {
+  port?: number
   repoManager: RepoManagerConfig
 }
 

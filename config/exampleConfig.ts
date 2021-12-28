@@ -1,6 +1,7 @@
 import { Config } from '../src/types/config'
 
 export default {
+  port: 3300,
   repoManager: {
     interval: 600,
     repos: [
