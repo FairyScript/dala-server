@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getLogger } from 'log4js'
-import { Config, ConfigRepo } from './types/config'
+import { ConfigRepo, RepoManagerConfig } from './types/config'
 import { Repo } from './types/repo'
 
 interface RepoItem {
@@ -9,7 +9,7 @@ interface RepoItem {
 }
 
 export class RepoManager {
-  private config: Config
+  private config: RepoManagerConfig
 
   repos: {
     [repoName: string]: RepoItem
@@ -21,8 +21,29 @@ export class RepoManager {
       .flat()
   }
 
-  constructor(config: Config) {
+  constructor(config: RepoManagerConfig) {
     this.config = config
+  }
+
+  getPluginByPreset(preset: string) {
+    const logger = getLogger('getPluginByPreset')
+
+    if (typeof this.config.presets[preset] === 'function') {
+      try {
+        const res: Repo = this.config.presets[preset].call(this, this)
+        //检查返回的到底是不是数组
+        if (res.length < 0) {
+          throw new Error()
+        }
+        return res
+      } catch (error) {
+        logger.error(`preset ${preset} throw an error: ${error}`)
+        return []
+      }
+    } else {
+      logger.error(`preset ${preset} not found!`)
+      return []
+    }
   }
 
   //更新repo

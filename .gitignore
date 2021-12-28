@@ -105,3 +105,4 @@ dist
 
 #temp file
 temp/
+config/config.ts
