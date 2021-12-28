@@ -1,47 +1,24 @@
-import * as YAML from 'yaml'
-import * as fs from 'fs'
-import { Repo, Plugin } from './types/repo'
-import { Config, ConfigRepo } from './types/config'
-import axios from 'axios'
-import { getLogger } from 'log4js'
+import Router from '@koa/router'
+import Koa from 'koa'
+import { configure, getLogger } from 'log4js'
+import { config } from './config'
+import { RepoManager } from './repoManager'
 
-const testConfig = fs.readFileSync('./temp/config.yml', 'utf-8')
-const config: Config = YAML.parse(testConfig)
+configure({
+  appenders: { console: { type: 'console' } },
+  categories: { default: { appenders: ['console'], level: 'info' } },
+})
 
-interface State {
-  repos: {
-    [repoName: string]: {
-      repo: Repo
-      lastUpdate: number
-    }
-  }
-}
+const rm = new RepoManager(config)
+rm.startAutoUpdate()
 
-const state: State = {
-  repos: {},
-}
+const logger = getLogger('KoaServer')
+//router
+const router = new Router()
+router.get('/', (ctx, next) => {
+  logger.info(`${ctx.path}`)
+  ctx.body = rm.allRepos
+})
 
-function updateRepo(state: State, repos: ConfigRepo[]) {
-  const logger = getLogger('updateRepo')
-  repos.forEach(async repo => {
-    try {
-      axios.get(repo.url).then(res => {
-        state.repos[repo.name] = {
-          repo: res.data,
-          lastUpdate: Date.now(),
-        }
-      })
-    } catch (error) {
-      logger.warn(`get repo ${repo.name} faild: \n${error}`)
-    }
-  })
-}
-
-function getRepos() {
-  const output: Plugin[] = []
-  Object.keys(state.repos).forEach(k => {
-    output.concat(state.repos[k].repo)
-  })
-
-  return output
-}
+const app = new Koa()
+app.use(router.routes()).use(router.allowedMethods()).listen(3300)
