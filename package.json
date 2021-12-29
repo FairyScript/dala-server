@@ -30,6 +30,7 @@
     "@koa/router": "^10.1.1",
     "axios": "^0.24.0",
     "koa": "^2.13.4",
+    "leancloud-storage": "^4.12.0",
     "leanengine": "^3.8.0",
     "log4js": "^6.3.0",
     "yaml": "^1.10.2"
