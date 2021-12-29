@@ -10,7 +10,9 @@ export async function getConfig(): Promise<Config> {
     return config
   } catch (error) {
     logger.warn('load config fail! try copy example Config')
-    fs.copyFileSync('./config/exampleConfig.ts', './config/config.ts')
-    return (await import('../config/config')).default
+    if (!fs.existsSync('./config/config.ts')) {
+      fs.copyFileSync('./config/exampleConfig.ts', './config/config.ts')
+    }
+    return (await import('../config/exampleConfig')).default
   }
 }
