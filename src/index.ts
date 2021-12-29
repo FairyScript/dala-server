@@ -4,13 +4,13 @@ import { configure, getLogger } from 'log4js'
 import { RepoManager } from './repoManager'
 import { getConfig } from './utils'
 ;(async () => {
-  const config = await getConfig()
-
   //init logger
   configure({
     appenders: { console: { type: 'console' } },
     categories: { default: { appenders: ['console'], level: 'info' } },
   })
+
+  const config = await getConfig()
 
   //init RepoManager
   const rm = new RepoManager(config.repoManager)

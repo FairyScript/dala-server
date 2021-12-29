@@ -25,6 +25,13 @@ export class RepoManager {
     this.config = config
   }
 
+  getPluginsByName(...names: string[]) {
+    return Object.keys(this.repos)
+      .filter(k => names.includes(k))
+      .map(name => this.repos[name].repo)
+      .flat()
+  }
+
   getPluginByPreset(preset: string) {
     const logger = getLogger('getPluginByPreset')
 
