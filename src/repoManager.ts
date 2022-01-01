@@ -25,6 +25,15 @@ export class RepoManager {
     this.config = config
   }
 
+  pickPluginByInternalName(...names: string[]) {
+    const allRepos = this.allRepos
+    return names
+      .map(name => {
+        return allRepos.find(p => name === p.InternalName)
+      })
+      .filter(Boolean)
+  }
+
   getPluginsByName(...names: string[]) {
     return Object.keys(this.repos)
       .filter(k => names.includes(k))
@@ -63,17 +72,16 @@ export class RepoManager {
     })
   }
 
-  private fetchRepo(repo: ConfigRepo) {
+  private async fetchRepo(repo: ConfigRepo) {
     const logger = getLogger('fetchRepo')
 
     try {
-      axios.get(repo.url).then(res => {
-        this.repos[repo.name] = {
-          repo: res.data,
-          lastUpdate: Date.now(),
-        }
-        logger.info(`repo ${repo.name} updated`)
-      })
+      const res = await axios.get(repo.url)
+      this.repos[repo.name] = {
+        repo: res.data,
+        lastUpdate: Date.now(),
+      }
+      logger.info(`repo ${repo.name} updated`)
     } catch (error) {
       logger.warn(`get repo ${repo.name} faild: \n${error}`)
     }
